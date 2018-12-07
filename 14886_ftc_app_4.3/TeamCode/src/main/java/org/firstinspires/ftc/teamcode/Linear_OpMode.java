@@ -50,13 +50,15 @@ public class Linear_OpMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        double hookServoPosition = 0;
+
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
         robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        robot.hookServo = hardwareMap.get (Servo.class, "hook_servo");
+        robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -73,40 +75,51 @@ public class Linear_OpMode extends LinearOpMode {
             // Setup a variable for the different power values of each drive motor
             double forwardValue = gamepad1.right_trigger;
             double reverseValue = gamepad1.left_trigger;
-            boolean armForwardValue = gamepad1.right_bumper;
-            boolean armReverseValue = gamepad1.left_bumper;
             double turnValue = gamepad1.left_stick_x;
+            boolean armUp = gamepad1.right_bumper;
+            boolean armDown = gamepad1.left_bumper;
+            boolean hookUp = gamepad1.a;
+            boolean hookDown = gamepad1.b;
             double driveValue = forwardValue - reverseValue;
 
             // these variables are for powers to the motor
             double leftPower;
             double rightPower;
             double armPower;
-            double hookPower;
-             /* owo */
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
 
-            if (armForwardValue) {
+            // Arm code here
+            if (armUp) {
                 armPower = 0.8;
                 robot.armMotor.setPower(armPower);
             } else {
                 robot.armMotor.setPower(0);
             }
 
-            if (armReverseValue) {
+            if (armDown) {
                 armPower = -0.8;
                 robot.armMotor.setPower(armPower);
             } else {
                 robot.armMotor.setPower(0);
             }
 
+            // Hook Servo Code Here
+            robot.hookServo.setPosition(hookServoPosition);
+
+            if (hookUp && hookServoPosition <= 180) {
+                hookServoPosition += .25;
+            }
+
+            if (hookDown && hookServoPosition >= 0) {
+                hookServoPosition -= .25;
+            }
+
             // Send calculated power to wheels
             leftPower = Range.clip(driveValue + turnValue, -1.0, 1.0);
-            rightPower = Range.clip(driveValue - turnValue, -1.0,1.0);
+            rightPower = Range.clip(driveValue - turnValue, -1.0, 1.0);
 
             robot.leftDrive.setPower(leftPower);
             robot.rightDrive.setPower(rightPower);
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
