@@ -7,8 +7,13 @@ public class AutonomousCommands {
 
     }
 
-    public void Drive(double leftPower, double rightPower) {
-        robot.leftDrive.setPower(leftPower);
-        robot.rightDrive.setPower(rightPower);
+    public void Drive(double power) {
+        robot.leftDrive.setPower(power);
+        robot.rightDrive.setPower(power);
+    }
+
+    public void Stop() {
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
     }
 }
