@@ -43,6 +43,7 @@ public class Auto_CraterSide extends LinearOpMode {
 
     /* Declare OpMode members. */
     MyRobot robot = new MyRobot();
+    AutonomousCommands auto = new AutonomousCommands();
 
     @Override
     public void runOpMode() {
@@ -61,6 +62,26 @@ public class Auto_CraterSide extends LinearOpMode {
         waitForStart();
 
         // Autonomous code here
+
+        // we drop down
+        // we move to depot
+        // we drop marker
+        auto.DropMarker(90);
+
+        /*if (Math.abs()robot.colorSensor.red() > robot.colorSensor.blue()) {
+
+        }*/
+
+        if(robot.colorSensor.red() > robot.colorSensor.blue()) {
+            // do this if it's yellow (255, 255, 0)
+            auto.Drive(.8);
+            sleep(1000);
+        } else if (robot.colorSensor.red() == robot.colorSensor.blue()) {
+            // do this if it's white (255, 255, 0)
+            auto.Stop();
+        } else {
+            // do nothing
+        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

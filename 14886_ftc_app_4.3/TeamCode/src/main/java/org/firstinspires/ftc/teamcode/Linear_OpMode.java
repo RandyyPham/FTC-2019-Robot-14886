@@ -60,6 +60,7 @@ public class Linear_OpMode extends LinearOpMode {
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
         robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
+        robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
         robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -125,6 +126,7 @@ public class Linear_OpMode extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("OwO", null);
             telemetry.update();
         }
     }

@@ -40,6 +40,7 @@ public class MyRobot {
     DcMotor rightDrive;
     DcMotor armMotor;
     Servo hookServo;
+    Servo markerServo;
     ColorSensor colorSensor;
     /* local OpMode members. */
     public HardwareMap hwMap;

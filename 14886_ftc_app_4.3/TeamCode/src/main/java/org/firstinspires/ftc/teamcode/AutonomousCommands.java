@@ -17,4 +17,7 @@ public class AutonomousCommands {
         robot.rightDrive.setPower(0);
     }
 
+    public void DropMarker(double position) {
+        robot.markerServo.setPosition(position);
+    }
 }
