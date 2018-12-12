@@ -20,4 +20,15 @@ public class AutonomousCommands {
     public void DropMarker(double position) {
         robot.markerServo.setPosition(position);
     }
+    
+    public void TurnLeft(double power){
+        robot.leftDrive.setPower(power);
+        robot.rightDrive.setPower(-power);
+    }
+
+    public void TurnRight(double power){
+        robot.leftDrive.setPower(-power);
+        robot.rightDrive.setPower(power);
+    }
+
 }
