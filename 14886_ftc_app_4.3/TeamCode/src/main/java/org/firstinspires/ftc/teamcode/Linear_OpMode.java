@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -59,14 +60,16 @@ public class Linear_OpMode extends LinearOpMode {
         robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
+        robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
         robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
         robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
-        robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
+        //robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
         robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.hookServo.setDirection(Servo.Direction.FORWARD);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -81,8 +84,10 @@ public class Linear_OpMode extends LinearOpMode {
             double turnValue = gamepad1.left_stick_x;
             boolean armUp = gamepad1.right_bumper;
             boolean armDown = gamepad1.left_bumper;
-            boolean hookUp = gamepad1.a;
-            boolean hookDown = gamepad1.b;
+            boolean legUp = gamepad1.a;
+            boolean legDown = gamepad1.b;
+            boolean hookUp = gamepad1.dpad_up;
+            boolean hookDown = gamepad1.dpad_down;
             double driveValue = forwardValue - reverseValue;
 
             // these variables are for powers to the motor
@@ -103,6 +108,19 @@ public class Linear_OpMode extends LinearOpMode {
                 robot.armMotor.setPower(armPower);
             } else {
                 robot.armMotor.setPower(0);
+            }
+
+            // Leg code here
+            if (legUp) {
+                robot.legMotor.setPower(.8);
+            } else {
+                robot.legMotor.setPower(0);
+            }
+
+            if (legDown) {
+                robot.legMotor.setPower(-.8);
+            } else {
+                robot.legMotor.setPower(0);
             }
 
             // Hook Servo Code Here

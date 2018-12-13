@@ -39,9 +39,10 @@ public class MyRobot {
     DcMotor leftDrive;
     DcMotor rightDrive;
     DcMotor armMotor;
+    DcMotor legMotor;
     Servo hookServo;
     Servo markerServo;
-    ColorSensor colorSensor;
+    //ColorSensor colorSensor;
     /* local OpMode members. */
     public HardwareMap hwMap;
 
@@ -59,12 +60,38 @@ public class MyRobot {
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         armMotor.setPower(0);
+        legMotor.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        legMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         /* owo */
+    }
+
+    public void Drive(double power) {
+        leftDrive.setPower(power);
+        rightDrive.setPower(power);
+    }
+
+    public void Stop() {
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+    }
+
+    public void DropMarker(double position) {
+        markerServo.setPosition(position);
+    }
+
+    public void TurnLeft(double power){
+        leftDrive.setPower(power);
+        rightDrive.setPower(-power);
+    }
+
+    public void TurnRight(double power){
+        leftDrive.setPower(-power);
+        rightDrive.setPower(power);
     }
 }
 
