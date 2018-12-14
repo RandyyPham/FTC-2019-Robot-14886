@@ -67,7 +67,6 @@ public class MyRobot {
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         legMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        /* owo */
     }
 
     public void Drive(double power) {
