@@ -173,6 +173,7 @@ public class Auto_DepotSide extends OpMode {
                 // Drive towards gold mineral
                 if (runtime.time() <= (startTime + 2)) {
                     //What we run
+
                     robot.Drive(1);
                 } else {
                     robot.Drive(0);

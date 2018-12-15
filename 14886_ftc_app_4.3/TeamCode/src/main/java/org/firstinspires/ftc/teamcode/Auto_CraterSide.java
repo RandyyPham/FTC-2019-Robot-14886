@@ -98,7 +98,7 @@ public class Auto_CraterSide extends OpMode {
         detector.useDefaults(); // Set detector to use default settings
 
         // Optional tuning
-        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignSize = 125; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
         detector.alignPosOffset = 250; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
@@ -161,12 +161,11 @@ public class Auto_CraterSide extends OpMode {
                 robot.TurnLeft(0.4);
                 if (detector.getAligned()) {
                     if (runtime.time() <= (startTime + 1)) {
-                        robot.TurnLeft(.4);
+                        robot.TurnLeft(.6);
                     }
                     robot.Drive(0);
                     startTime = runtime.time();
                     phase++;
-
                 }
                 break;
             case 3:
@@ -182,8 +181,8 @@ public class Auto_CraterSide extends OpMode {
                 }
                 break;
             case 4:
-                if (runtime.time() <= (startTime + 2)) {
-                    robot.ArmPower(.7);
+                if (runtime.time() <= (startTime + .75)) {
+                    robot.ArmPower(-.7);
                 } else {//End
                     robot.Drive(0);
                     robot.ArmPower(0);
