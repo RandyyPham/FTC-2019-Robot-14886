@@ -79,8 +79,8 @@ public class Linear_OpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Setup a variable for the different power values of each drive motor
-            double forwardValue = gamepad1.right_trigger;
-            double reverseValue = gamepad1.left_trigger;
+            //double forwardValue = gamepad1.right_trigger;
+            //double reverseValue = gamepad1.left_trigger;
             double turnValue = gamepad1.left_stick_x;
             boolean armUp = gamepad1.right_bumper;
             boolean armDown = gamepad1.left_bumper;
@@ -88,7 +88,6 @@ public class Linear_OpMode extends LinearOpMode {
             boolean legDown = gamepad1.b;
             boolean hookUp = gamepad1.dpad_up;
             boolean hookDown = gamepad1.dpad_down;
-            double driveValue = forwardValue - reverseValue;
 
             // these variables are for powers to the motor
             double leftPower;
@@ -135,8 +134,8 @@ public class Linear_OpMode extends LinearOpMode {
             }
 
             // Send calculated power to wheels
-            leftPower = Range.clip(driveValue + turnValue, -1.0, 1.0);
-            rightPower = Range.clip(driveValue - turnValue, -1.0, 1.0);
+            leftPower = Range.clip(gamepad1.left_trigger - gamepad1.right_trigger + gamepad1.left_stick_x, -1.0, 1.0);
+            rightPower = Range.clip(gamepad1.left_trigger - gamepad1.right_trigger - gamepad1.left_stick_x, -1.0, 1.0);
 
             robot.leftDrive.setPower(leftPower);
             robot.rightDrive.setPower(rightPower);

@@ -92,5 +92,9 @@ public class MyRobot {
         leftDrive.setPower(-power);
         rightDrive.setPower(power);
     }
+
+    public void ArmPower(double power){
+        armMotor.setPower(power);
+    }
 }
 
