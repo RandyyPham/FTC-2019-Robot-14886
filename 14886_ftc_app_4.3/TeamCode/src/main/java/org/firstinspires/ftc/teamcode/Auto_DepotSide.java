@@ -183,8 +183,7 @@ public class Auto_DepotSide extends OpMode {
                 break;
             case 4:
                 if (runtime.time() <= (startTime + 2)) {
-
-                    //robot.ArmPower(.7);
+                    robot.ArmPower(.7);
                 } else {//End
                     robot.Drive(0);
                     robot.ArmPower(0);
