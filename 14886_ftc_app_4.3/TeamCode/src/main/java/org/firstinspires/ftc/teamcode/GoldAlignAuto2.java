@@ -39,16 +39,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="GoldAuto 2", group="DogeCV")
+@Autonomous(name = "GoldAlignAuto Template", group = "DogeCV")
 
-public class GoldAlignAuto2 extends OpMode
-{
+public class GoldAlignAuto2 extends OpMode {
     // Detector object
     private GoldAlignDetector detector;
     MyRobot robot = new MyRobot(); // uses the Robot's hardware
     private ElapsedTime runtime = new ElapsedTime();
     int phase = 0;
     double startTime = 0;
+
     @Override
     public void init() {
         telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
@@ -60,25 +60,18 @@ public class GoldAlignAuto2 extends OpMode
         robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        //robot.intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
-        //robot.trapdoor = hardwareMap.get(Servo.class, "trapdoor");
-        //robot.trapdoor2 = hardwareMap.get(Servo.class, "trapdoor2");
-
+        robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
+        robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
+        robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
+        //robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        // Was FORWARD, REVERSE for leftDrive and rightDrive
-        robot.leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        robot.rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
-        //robot.armMotor2.setDirection(DcMotor.Direction.FORWARD);
-        //robot.intake1.setDirection(Servo.Direction.FORWARD);
-        //robot.intake2.setDirection(Servo.Direction.FORWARD);
-        //robot.intakeMotor.setDirection(DcMotor.Direction.FORWARD);
-
-
-
-
-
+        robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.hookServo.setDirection(Servo.Direction.FORWARD);
+        robot.markerServo.setDirection(Servo.Direction.FORWARD);
 
 
         /*// Set up detector
@@ -144,17 +137,19 @@ public class GoldAlignAuto2 extends OpMode
      */
     @Override
     public void loop() {
-        telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral?
-        telemetry.addData("X Pos" , detector.getXPosition()); // Gold X position.
-        switch(phase){
+        telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral?
+        telemetry.addData("X Pos", detector.getXPosition()); // Gold X position.
+        switch (phase) {
             case 0:
+                // enable camera detector
                 detector.enable();
                 phase++;
                 break;
             case 1:
-                if(runtime.time() <= 5) {
+                // waits for phone to init
+                if (runtime.time() <= 5) {
                     //robot.Drop();
-                }else{
+                } else {
                     //robot.Close();
 
                     startTime = runtime.time();
@@ -162,8 +157,9 @@ public class GoldAlignAuto2 extends OpMode
                 }
                 break;
             case 2:
+                // Seek mineral
                 robot.TurnLeft(0.4);
-                if(detector.getAligned()){
+                if (detector.getAligned()) {
                     robot.Drive(0);
                     startTime = runtime.time();
                     phase++;
@@ -171,10 +167,11 @@ public class GoldAlignAuto2 extends OpMode
                 }
                 break;
             case 3:
-                if(runtime.time() <= (startTime + 2)){
+                // Drive towards gold mineral
+                if (runtime.time() <= (startTime + 2)) {
                     //What we run
                     robot.Drive(-.8);
-                }else{
+                } else {
                     robot.Drive(0);
                     startTime = runtime.time();
                     phase++;
@@ -182,10 +179,10 @@ public class GoldAlignAuto2 extends OpMode
                 }
                 break;
             case 4:
-                if(runtime.time() <= (startTime + 2)){
+                if (runtime.time() <= (startTime + 2)) {
 
                     //robot.ArmPower(.7);
-                }else{//End
+                } else {//End
                     robot.Drive(0);
                     robot.ArmPower(0);
                     startTime = runtime.time(); // Reset timer
@@ -197,8 +194,6 @@ public class GoldAlignAuto2 extends OpMode
                 robot.Drive(0);
                 detector.disable();
                 break;
-
-
 
 
         }

@@ -29,40 +29,183 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-@Autonomous(name="Auto_DepotSide", group="Pushbot")
-//@Disabled
-public class Auto_DepotSide extends LinearOpMode {
+@Autonomous(name = "Auto Depot Side", group = "DogeCV")
 
-    /* Declare OpMode members. */
-    MyRobot robot = new MyRobot();
+public class Auto_DepotSide extends OpMode {
+    // Detector object
+    private GoldAlignDetector detector;
+    MyRobot robot = new MyRobot(); // uses the Robot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
+    int phase = 0;
+    double startTime = 0;
 
     @Override
-    public void runOpMode() {
+    public void init() {
+        telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
 
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
-        robot.init(hardwareMap);
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+        robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
+        robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
+        robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
+        robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
+        robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
+        //robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
+        // Most robots need the motor on one side to be reversed to drive forward
+        // Reverse the motor that runs backwards when connected directly to the battery
+        robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.hookServo.setDirection(Servo.Direction.FORWARD);
+        robot.markerServo.setDirection(Servo.Direction.FORWARD);
+
+
+        /*// Set up detector
+        detector = new GoldAlignDetector(); // Create detector
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
+        detector.useDefaults(); // Set detector to use default settings
+
+        // Optional tuning
+        detector.alignSize = 140; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignPosOffset = 110; // How far from center frame to offset this alignment zone.
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 200; //Original 0.005
+
+        detector.ratioScorer.weight = 5000; //Original 5
+        detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
+
+        detector.enable(); // Start the detector!*/
+        // Set up detector
+        detector = new GoldAlignDetector(); // Create detector
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
+        detector.useDefaults(); // Set detector to use default settings
+
+        // Optional tuning
+        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignPosOffset = 250; // How far from center frame to offset this alignment zone.
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005; //
+
+        detector.ratioScorer.weight = 5; //
+        detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
+
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData("Status", "Ready to run");
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
 
-        // Autonomous code here
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);
     }
+
+    /*
+     * Code to run REPEATEDLY when the driver hits INIT
+     */
+    @Override
+    public void init_loop() {
+    }
+
+    /*
+     * Code to run ONCE when the driver hits PLAY
+     */
+    @Override
+    public void start() {
+
+    }
+
+    /*
+     * Code to run REPEATEDLY when the driver hits PLAY
+     */
+    @Override
+    public void loop() {
+        telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral?
+        telemetry.addData("X Pos", detector.getXPosition()); // Gold X position.
+        switch (phase) {
+            case 0:
+                // enable camera detector
+                detector.enable();
+                phase++;
+                break;
+            case 1:
+                // waits for phone to init
+                if (runtime.time() <= 5) {
+                    //robot.Drop();
+                } else {
+                    //robot.Close();
+
+                    startTime = runtime.time();
+                    phase++;
+                }
+                break;
+            case 2:
+                // Seek mineral
+                robot.TurnLeft(0.4);
+                if (detector.getAligned()) {
+                    robot.Drive(0);
+                    startTime = runtime.time();
+                    phase++;
+
+                }
+                break;
+            case 3:
+                // Drive towards gold mineral
+                if (runtime.time() <= (startTime + 2)) {
+                    //What we run
+                    robot.Drive(-.8);
+                } else {
+                    robot.Drive(0);
+                    startTime = runtime.time();
+                    phase++;
+
+                }
+                break;
+            case 4:
+                if (runtime.time() <= (startTime + 2)) {
+
+                    //robot.ArmPower(.7);
+                } else {//End
+                    robot.Drive(0);
+                    robot.ArmPower(0);
+                    startTime = runtime.time(); // Reset timer
+                    phase++;//Move to next action
+
+                }
+                break;
+            case 5:
+                robot.Drive(0);
+                detector.disable();
+                break;
+
+
+        }
+    }
+
+    /*
+     * Code to run ONCE after the driver hits STOP
+     */
+    @Override
+    public void stop() {
+        // Disable the detector
+        detector.disable();
+    }
+
 }
