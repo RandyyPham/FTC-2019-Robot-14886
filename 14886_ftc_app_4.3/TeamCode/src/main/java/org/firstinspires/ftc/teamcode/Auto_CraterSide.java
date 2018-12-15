@@ -147,7 +147,7 @@ public class Auto_CraterSide extends OpMode {
                 break;
             case 1:
                 // waits for phone to init
-                if (runtime.time() <= 5) {
+                if (runtime.time() <= 1) {
                     //robot.Drop();
                 } else {
                     //robot.Close();
@@ -170,7 +170,7 @@ public class Auto_CraterSide extends OpMode {
                 // Drive towards gold mineral
                 if (runtime.time() <= (startTime + 2)) {
                     //What we run
-                    robot.Drive(-.8);
+                    robot.Drive(.8);
                 } else {
                     robot.Drive(0);
                     startTime = runtime.time();
