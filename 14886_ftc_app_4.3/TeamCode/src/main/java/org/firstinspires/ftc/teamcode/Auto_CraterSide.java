@@ -106,7 +106,7 @@ public class Auto_CraterSide extends OpMode {
         //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         detector.maxAreaScorer.weight = 0.005; //
 
-        detector.ratioScorer.weight = 5; //
+        detector.ratioScorer.weight = 1; //
         detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
 
 
@@ -160,6 +160,9 @@ public class Auto_CraterSide extends OpMode {
                 // Seek mineral
                 robot.TurnLeft(0.4);
                 if (detector.getAligned()) {
+                    if (runtime.time() <= (startTime + 1)) {
+                        robot.TurnLeft(.4);
+                    }
                     robot.Drive(0);
                     startTime = runtime.time();
                     phase++;
@@ -170,7 +173,7 @@ public class Auto_CraterSide extends OpMode {
                 // Drive towards gold mineral
                 if (runtime.time() <= (startTime + 2)) {
                     //What we run
-                    robot.Drive(.8);
+                    robot.Drive(1);
                 } else {
                     robot.Drive(0);
                     startTime = runtime.time();
