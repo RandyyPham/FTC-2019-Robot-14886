@@ -195,8 +195,6 @@ public class Auto_CraterSide extends OpMode {
                 robot.Drive(0);
                 detector.disable();
                 break;
-
-
         }
     }
 
