@@ -53,7 +53,6 @@ public class Auto_CraterSide extends OpMode {
     public void init() {
         telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
 
-
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
@@ -73,7 +72,14 @@ public class Auto_CraterSide extends OpMode {
         robot.hookServo.setDirection(Servo.Direction.FORWARD);
         robot.markerServo.setDirection(Servo.Direction.FORWARD);
 
-
+        /*
+         *
+         *
+         * REFERENCE CODE FOR DETECTOR
+         * IT IS THE ORIGINAL SETTINGS
+         *
+         *
+         * */
         /*// Set up detector
         detector = new GoldAlignDetector(); // Create detector
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
@@ -92,6 +98,14 @@ public class Auto_CraterSide extends OpMode {
         detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
 
         detector.enable(); // Start the detector!*/
+
+        /*
+         *
+         *
+         * ACTUAL DETECTOR CODE BELOW
+         *
+         *
+         * */
         // Set up detector
         detector = new GoldAlignDetector(); // Create detector
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
@@ -108,13 +122,17 @@ public class Auto_CraterSide extends OpMode {
 
         detector.ratioScorer.weight = 1; //
         detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
-
+        /*
+         *
+         *
+         * END OF DETECTOR CODE
+         *
+         *
+         * */
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");
         telemetry.update();
-
-
     }
 
     /*
@@ -160,9 +178,11 @@ public class Auto_CraterSide extends OpMode {
                 // Seek mineral
                 robot.TurnLeft(0.4);
                 if (detector.getAligned()) {
+                    // Turns for one second to compensate for robot angle
                     if (runtime.time() <= (startTime + 1)) {
                         robot.TurnLeft(.6);
                     }
+                    // Stop Driving
                     robot.Drive(0);
                     startTime = runtime.time();
                     phase++;
@@ -171,9 +191,10 @@ public class Auto_CraterSide extends OpMode {
             case 3:
                 // Drive towards gold mineral
                 if (runtime.time() <= (startTime + 2)) {
-                    //What we run
+                    // What we run
                     robot.Drive(1);
                 } else {
+                    // Stop Driving
                     robot.Drive(0);
                     startTime = runtime.time();
                     phase++;
@@ -181,14 +202,15 @@ public class Auto_CraterSide extends OpMode {
                 }
                 break;
             case 4:
+                // Raise the arm holding the Team Marker, thereby dropping the marker
                 if (runtime.time() <= (startTime + .75)) {
                     robot.ArmPower(-.7);
-                } else {//End
+                } else {
+                    //End
                     robot.Drive(0);
                     robot.ArmPower(0);
                     startTime = runtime.time(); // Reset timer
-                    phase++;//Move to next action
-
+                    phase++;// Move to next action
                 }
                 break;
             case 5:
@@ -206,5 +228,4 @@ public class Auto_CraterSide extends OpMode {
         // Disable the detector
         detector.disable();
     }
-
 }

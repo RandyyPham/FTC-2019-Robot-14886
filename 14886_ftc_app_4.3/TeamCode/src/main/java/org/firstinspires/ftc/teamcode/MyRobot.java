@@ -79,21 +79,17 @@ public class MyRobot {
         rightDrive.setPower(0);
     }
 
-    public void DropMarker(double position) {
-        markerServo.setPosition(position);
-    }
-
-    public void TurnLeft(double power){
+    public void TurnLeft(double power) {
         leftDrive.setPower(power);
         rightDrive.setPower(-power);
     }
 
-    public void TurnRight(double power){
+    public void TurnRight(double power) {
         leftDrive.setPower(-power);
         rightDrive.setPower(power);
     }
 
-    public void ArmPower(double power){
+    public void ArmPower(double power) {
         armMotor.setPower(power);
     }
 }
