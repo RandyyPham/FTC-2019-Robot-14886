@@ -165,9 +165,7 @@ public class Auto_DepotSide extends OpMode {
             case 1:
                 // waits for phone to init
                 if (runtime.time() <= 1) {
-                    //robot.Drop();
                 } else {
-                    //robot.Close();
                     startTime = runtime.time();
                     phase++;
                 }
@@ -216,6 +214,7 @@ public class Auto_DepotSide extends OpMode {
                 break;
         }
     }
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
