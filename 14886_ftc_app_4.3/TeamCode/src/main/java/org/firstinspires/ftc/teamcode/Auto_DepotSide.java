@@ -170,7 +170,6 @@ public class Auto_DepotSide extends OpMode {
                     //robot.Drop();
                 } else {
                     //robot.Close();
-
                     startTime = runtime.time();
                     phase++;
                 }
@@ -187,7 +186,6 @@ public class Auto_DepotSide extends OpMode {
                     robot.Drive(0);
                     startTime = runtime.time();
                     phase++;
-
                 }
                 break;
             case 3:
@@ -212,7 +210,6 @@ public class Auto_DepotSide extends OpMode {
                     robot.ArmPower(0);
                     startTime = runtime.time(); // Reset timer
                     phase++;// Move to next action
-
                 }
                 break;
             case 5:
@@ -221,7 +218,6 @@ public class Auto_DepotSide extends OpMode {
                 break;
         }
     }
-
     /*
      * Code to run ONCE after the driver hits STOP
      */

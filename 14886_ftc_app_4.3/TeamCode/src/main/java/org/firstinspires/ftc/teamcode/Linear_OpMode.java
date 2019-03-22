@@ -40,7 +40,6 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name = "Linear_OpMode", group = "Linear Opmode")
-//@Disabled
 public class Linear_OpMode extends LinearOpMode {
 
     // Declare OpMode members.
@@ -63,7 +62,6 @@ public class Linear_OpMode extends LinearOpMode {
         robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
         robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
         robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
-        //robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -79,9 +77,9 @@ public class Linear_OpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Setup a variable for the different power values of each drive motor
-            //double forwardValue = gamepad1.right_trigger;
-            //double reverseValue = gamepad1.left_trigger;
-            double turnValue = gamepad1.left_stick_x;
+            double moveValue = gamepad1.left_stick_y;
+            double turnValue = gamepad1.right_stick_x;
+
             boolean armUp = gamepad1.right_bumper;
             boolean armDown = gamepad1.left_bumper;
             boolean legUp = gamepad1.a;
@@ -90,20 +88,24 @@ public class Linear_OpMode extends LinearOpMode {
             boolean hookDown = gamepad1.dpad_down;
 
             // these variables are for powers to the motor
-            double leftPower;
-            double rightPower;
+            double leftPower = Range.clip(moveValue + turnValue, -1.0, 1.0);
+            double rightPower = Range.clip(moveValue - turnValue, -1.0, 1.0);
             double armPower;
+
+            // Drive code here
+            robot.leftDrive.setPower(leftPower);
+            robot.rightDrive.setPower(rightPower);
 
             // Arm code here
             if (armUp) {
-                armPower = 0.8;
+                armPower = 1.0;
                 robot.armMotor.setPower(armPower);
             } else {
                 robot.armMotor.setPower(0);
             }
 
             if (armDown) {
-                armPower = -0.8;
+                armPower = -1.0;
                 robot.armMotor.setPower(armPower);
             } else {
                 robot.armMotor.setPower(0);
@@ -111,13 +113,13 @@ public class Linear_OpMode extends LinearOpMode {
 
             // Leg code here
             if (legUp) {
-                robot.legMotor.setPower(.8);
+                robot.legMotor.setPower(1.0);
             } else {
                 robot.legMotor.setPower(0);
             }
 
             if (legDown) {
-                robot.legMotor.setPower(-.8);
+                robot.legMotor.setPower(1.0);
             } else {
                 robot.legMotor.setPower(0);
             }
@@ -132,13 +134,6 @@ public class Linear_OpMode extends LinearOpMode {
             if (hookDown && hookServoPosition >= 0) {
                 hookServoPosition -= .25;
             }
-
-            // Send calculated power to wheels
-            leftPower = Range.clip(gamepad1.left_trigger - gamepad1.right_trigger + gamepad1.left_stick_x, -1.0, 1.0);
-            rightPower = Range.clip(gamepad1.left_trigger - gamepad1.right_trigger - gamepad1.left_stick_x, -1.0, 1.0);
-
-            robot.leftDrive.setPower(leftPower);
-            robot.rightDrive.setPower(rightPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
