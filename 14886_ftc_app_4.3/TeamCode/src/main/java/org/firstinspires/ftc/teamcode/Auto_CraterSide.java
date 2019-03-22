@@ -59,7 +59,6 @@ public class Auto_CraterSide extends OpMode {
         robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
         robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
         robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
         //robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
@@ -68,7 +67,6 @@ public class Auto_CraterSide extends OpMode {
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
         robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
-        robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.hookServo.setDirection(Servo.Direction.FORWARD);
         robot.markerServo.setDirection(Servo.Direction.FORWARD);
 

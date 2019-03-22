@@ -59,7 +59,6 @@ public class Linear_OpMode extends LinearOpMode {
         robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
         robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
         robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
         // Most robots need the motor on one side to be reversed to drive forward
@@ -67,7 +66,6 @@ public class Linear_OpMode extends LinearOpMode {
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
         robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
-        robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.hookServo.setDirection(Servo.Direction.FORWARD);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -80,10 +78,8 @@ public class Linear_OpMode extends LinearOpMode {
             double moveValue = gamepad1.left_stick_y;
             double turnValue = gamepad1.right_stick_x;
 
-            boolean armUp = gamepad1.right_bumper;
-            boolean armDown = gamepad1.left_bumper;
-            boolean legUp = gamepad1.a;
-            boolean legDown = gamepad1.b;
+            boolean armUp = gamepad1.left_bumper;
+            boolean armDown = gamepad1.right_bumper;
             boolean hookUp = gamepad1.dpad_up;
             boolean hookDown = gamepad1.dpad_down;
 
@@ -109,19 +105,6 @@ public class Linear_OpMode extends LinearOpMode {
                 robot.armMotor.setPower(armPower);
             } else {
                 robot.armMotor.setPower(0);
-            }
-
-            // Leg code here
-            if (legUp) {
-                robot.legMotor.setPower(1.0);
-            } else {
-                robot.legMotor.setPower(0);
-            }
-
-            if (legDown) {
-                robot.legMotor.setPower(1.0);
-            } else {
-                robot.legMotor.setPower(0);
             }
 
             // Hook Servo Code Here
