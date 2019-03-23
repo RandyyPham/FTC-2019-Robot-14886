@@ -59,13 +59,14 @@ public class Linear_OpMode extends LinearOpMode {
         robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
+        robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
         robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
-        robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
         robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.hookServo.setDirection(Servo.Direction.FORWARD);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -78,6 +79,9 @@ public class Linear_OpMode extends LinearOpMode {
             double moveValue = gamepad1.left_stick_y;
             double turnValue = gamepad1.right_stick_x;
 
+            double legUp = gamepad1.left_trigger;
+            double legDown = gamepad1.right_trigger;
+
             boolean armUp = gamepad1.left_bumper;
             boolean armDown = gamepad1.right_bumper;
             boolean hookUp = gamepad1.dpad_up;
@@ -86,6 +90,7 @@ public class Linear_OpMode extends LinearOpMode {
             // these variables are for powers to the motor
             double leftPower = Range.clip(moveValue + turnValue, -1.0, 1.0);
             double rightPower = Range.clip(moveValue - turnValue, -1.0, 1.0);
+            double legPower = Range.clip(legUp - legDown, -1.0, 1.0);
             double armPower;
 
             // Drive code here
@@ -106,6 +111,9 @@ public class Linear_OpMode extends LinearOpMode {
             } else {
                 robot.armMotor.setPower(0);
             }
+
+            // Leg code here
+            robot.legMotor.setPower(legPower);
 
             // Hook Servo Code Here
             robot.hookServo.setPosition(hookServoPosition);

@@ -60,7 +60,6 @@ public class Auto_DepotSide extends OpMode {
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
         robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
-        robot.markerServo = hardwareMap.get(Servo.class, "marker_servo");
         //robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -68,7 +67,6 @@ public class Auto_DepotSide extends OpMode {
         robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.hookServo.setDirection(Servo.Direction.FORWARD);
-        robot.markerServo.setDirection(Servo.Direction.FORWARD);
 
         /*
          *
