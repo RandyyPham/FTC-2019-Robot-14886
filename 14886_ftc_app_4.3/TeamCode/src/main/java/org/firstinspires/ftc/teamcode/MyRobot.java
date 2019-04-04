@@ -40,7 +40,9 @@ public class MyRobot {
     DcMotor rightDrive;
     DcMotor armMotor;
     DcMotor legMotor;
-    Servo hookServo;
+    Servo hookServo1;
+    Servo hookServo2;
+    Servo dropServo;
     //ColorSensor colorSensor;
     /* local OpMode members. */
     public HardwareMap hwMap;
@@ -90,6 +92,20 @@ public class MyRobot {
 
     public void ArmPower(double power) {
         armMotor.setPower(power);
+    }
+
+    public void Unhook() {
+        hookServo1.setPosition(0);
+        hookServo2.setPosition(1);
+    }
+
+    public void Hook() {
+        hookServo1.setPosition(1);
+        hookServo2.setPosition(0);
+    }
+
+    public void Drop() {
+        dropServo.setPosition(0);
     }
 }
 

@@ -31,9 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -60,14 +58,18 @@ public class Linear_OpMode extends LinearOpMode {
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
         robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
-        robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
+        robot.hookServo1 = hardwareMap.get(Servo.class, "hook_servo1");
+        robot.hookServo2 = hardwareMap.get(Servo.class, "hook_servo2");
+        robot.dropServo = hardwareMap.get(Servo.class, "drop_servo");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
         robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
-        robot.hookServo.setDirection(Servo.Direction.FORWARD);
+        robot.hookServo1.setDirection(Servo.Direction.FORWARD);
+        robot.hookServo2.setDirection(Servo.Direction.FORWARD);
+        robot.dropServo.setDirection(Servo.Direction.FORWARD);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -84,8 +86,10 @@ public class Linear_OpMode extends LinearOpMode {
 
             boolean armUp = gamepad1.left_bumper;
             boolean armDown = gamepad1.right_bumper;
-            boolean hookUp = gamepad1.dpad_up;
-            boolean hookDown = gamepad1.dpad_down;
+
+            boolean hookUp = gamepad1.a;
+            boolean hookDown = gamepad1.b;
+            boolean drop = gamepad1.y;
 
             // these variables are for powers to the motor
             double leftPower = Range.clip(moveValue + turnValue, -1.0, 1.0);
@@ -112,11 +116,32 @@ public class Linear_OpMode extends LinearOpMode {
                 robot.armMotor.setPower(0);
             }
 
+            // Hook code here
+            if (hookUp) {
+                robot.Hook();
+            } else {
+                // Default Servo Position
+            }
+
+            if (hookDown) {
+                robot.Unhook();
+            } else {
+                // Default Servo Position
+            }
+
+            // Drop code here
+            if (drop) {
+                robot.Drop();
+            } else {
+                // Default Servo Position
+            }
+
             // Leg code here
             robot.legMotor.setPower(legPower);
 
+/*
             // Hook Servo Code Here
-            robot.hookServo.setPosition(hookServoPosition);
+            robot.hookServo1.setPosition(hookServoPosition);
 
             if (hookUp && hookServoPosition <= 180) {
                 hookServoPosition += .25;
@@ -125,6 +150,7 @@ public class Linear_OpMode extends LinearOpMode {
             if (hookDown && hookServoPosition >= 0) {
                 hookServoPosition -= .25;
             }
+*/
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -59,14 +59,20 @@ public class Auto_CraterSide extends OpMode {
         robot.leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         robot.rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         robot.armMotor = hardwareMap.get(DcMotor.class, "arm_motor");
-        robot.hookServo = hardwareMap.get(Servo.class, "hook_servo");
+        robot.legMotor = hardwareMap.get(DcMotor.class, "leg_motor");
+        robot.hookServo1 = hardwareMap.get(Servo.class, "hook_servo1");
+        robot.hookServo2 = hardwareMap.get(Servo.class, "hook_servo2");
+        robot.dropServo = hardwareMap.get(Servo.class, "drop_servo");
         //robot.colorSensor = hardwareMap.get(ColorSensor.class, "color_sensor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
         robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
         robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
-        robot.hookServo.setDirection(Servo.Direction.FORWARD);
+        robot.legMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.hookServo1.setDirection(Servo.Direction.FORWARD);
+        robot.hookServo2.setDirection(Servo.Direction.FORWARD);
+        robot.dropServo.setDirection(Servo.Direction.FORWARD);
 
         /*
          *
@@ -155,22 +161,37 @@ public class Auto_CraterSide extends OpMode {
         telemetry.addData("X Pos", detector.getXPosition()); // Gold X position.
         switch (phase) {
             case 0:
-                // enable camera detector
-                detector.enable();
-                phase++;
+                // Drop the robot first from starting position
+                if (runtime.time() <= 2) {
+                    robot.Drop();
+                    robot.Drive(0);
+                } else {
+                    startTime = runtime.time();
+                    phase++;
+                }
                 break;
             case 1:
-                // waits for phone to init
-                if (runtime.time() <= 1) {
-                    //robot.Drop();
+                // Unhook from latch
+                if (runtime.time() <= 5) {
+                    robot.Unhook();
+                    robot.Drive(0);
                 } else {
-                    //robot.Close();
-
+                    // Enable detector
+                    robot.Hook();
+                    detector.enable();
                     startTime = runtime.time();
                     phase++;
                 }
                 break;
             case 2:
+                // waits for phone to init
+                if (runtime.time() <= 1) {
+                } else {
+                    startTime = runtime.time();
+                    phase++;
+                }
+                break;
+            case 3:
                 // Seek mineral
                 robot.TurnLeft(0.4);
                 if (detector.getAligned()) {
@@ -184,9 +205,9 @@ public class Auto_CraterSide extends OpMode {
                     phase++;
                 }
                 break;
-            case 3:
+            case 4:
                 // Drive towards gold mineral
-                if (runtime.time() <= (startTime + 2)) {
+                if (runtime.time() <= (startTime + 3)) {
                     // What we run
                     robot.Drive(1);
                 } else {
@@ -197,7 +218,7 @@ public class Auto_CraterSide extends OpMode {
 
                 }
                 break;
-            case 4:
+           /* case 4:
                 // Raise the arm holding the Team Marker, thereby dropping the marker
                 if (runtime.time() <= (startTime + .75)) {
                     robot.ArmPower(-.7);
@@ -208,7 +229,7 @@ public class Auto_CraterSide extends OpMode {
                     startTime = runtime.time(); // Reset timer
                     phase++;// Move to next action
                 }
-                break;
+                break;*/
             case 5:
                 robot.Drive(0);
                 detector.disable();
